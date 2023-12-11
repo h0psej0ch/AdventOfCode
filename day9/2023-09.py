@@ -7,7 +7,7 @@ def zero(x):
             return False
     return True
 
-for line in data:
+for line in [data[1]]:
     line = line.split()
     line = [int(i) for i in line]
     biglist = []
@@ -18,6 +18,7 @@ for line in data:
             temp.append(int(line[j+1])-int(line[j]))
         biglist.append(temp)
         line = temp
+        print(temp)
     for val in range(len(biglist)-1):
         listval = -(val+1)
         new = biglist[listval-1][-1] + biglist[listval][-1]
