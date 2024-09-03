@@ -149,7 +149,7 @@ impl Solver {
 
         while queue.len() > 0 {
             let current_entry = queue.pop_front().unwrap();
-            let mut current_map = current_entry.2;
+            let current_map = current_entry.2;
             match self.rules.get(current_entry.0) {
                 Some(current_rule) => {
                     let rule = &current_rule[current_entry.1];
