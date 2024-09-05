@@ -72,58 +72,75 @@ impl Solver {
 
         let mut queue: VecDeque<(String, bool)> = VecDeque::new();
 
+        let mut button_press: usize = 0;
+
         let mut low: usize = 1;
         let mut high: usize = 0;
 
-        // queue.push_back(("roadcaster".to_string(), false));
-
-        for node in &self.flip_flop.get("roadcaster").unwrap().1 {
-            queue.push_back((node.to_string(), false))
-        }
-
-        println!("{}", self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)));
-
         let mut first = true;
 
-        // Improve: Push multiple times for better result if queue is empty :)
+        while !self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)) && button_press < 3|| first {
+            button_press += 1;
 
-        while (!self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)) && queue.len() > 0) || first {
-            let current_node = queue.pop_front().unwrap_or(("".to_string(), false));
-            if current_node.1 { high += 1} else { low += 1 };
-            match self.flip_flop.get_mut(&current_node.0) {
-                Some(flip) => {
-                    println!("flip");
-                    println!("{}", current_node.1);
-                    if !current_node.1 {
-                        flip.0 = !flip.0;
-                        println!("{:?}", flip.1);
-                        for node in &flip.1 {
-                            println!("{}", node);
-                            queue.push_back((node.to_string(), flip.0));
-                        }
-                    }
-                }
-                None => {
-                    match self.conjunction.get_mut(&current_node.0) {
-                        Some(conj) => {
-                            println!("conj");
-                            conj.0.insert(current_node.0, current_node.1);
-                            for node in &conj.1 {
-                                queue.push_back((node.to_string(), conj.0.keys().all(|key| *conj.0.get(key).unwrap_or(&false))))
+            // queue.push_back(("roadcaster".to_string(), false));
+
+            for node in &self.flip_flop.get("roadcaster").unwrap().1 {
+                queue.push_back((node.to_string(), false))
+            }
+
+            // println!("{}", self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)));
+
+            first = true;
+            let mut done_check = false;
+
+            // Improve: Push multiple times for better result if queue is empty :)
+
+            while (!done_check && queue.len() > 0) || first {
+                let current_node = queue.pop_front().unwrap_or(("".to_string(), false));
+                if current_node.1 { high += 1} else { low += 1 };
+                let clone = current_node.clone();
+                match self.flip_flop.get_mut(&current_node.0) {
+                    Some(flip) => {
+                        // println!("flip");
+                        // println!("{}", current_node.1);
+                        if !current_node.1 {
+                            flip.0 = !flip.0;
+                            // println!("{:?}", flip.1);
+                            for node in &flip.1 {
+                                // println!("{}", node);
+                                if !done_check {queue.push_back((node.to_string(), flip.0)); }
+                                println!("{},  -{}-> {}", clone.0, if flip.0 {"high"} else {"low"}, node);
                             }
                         }
-                        None => {}
                     }
+                    None => {
+                        match self.conjunction.get_mut(&current_node.0) {
+                            Some(conj) => {
+                                    // println!("conj");
+                                    conj.0.insert(current_node.0, current_node.1);
+                                    for node in &conj.1 {
+                                        let signal = conj.0.keys().all(|key| *conj.0.get(key).unwrap_or(&false));
+                                        if !done_check {queue.push_back((node.to_string(), conj.0.keys().all(|key| *conj.0.get(key).unwrap_or(&false)))); }
+                                        println!("{},  -{}-> {}", clone.0, if signal {"high"} else {"low"}, node);
+                                    }
+                            }
+                            None => {}
+                        }
+                    }
+
+                } 
+                if first { first = !first }
+
+                if self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)) {
+                    done_check = true;
                 }
+                // println!("{:?}", queue)
+            }
 
-            } 
-            if first { first = !first }
-            println!("{:?}", queue)
+            // TODO implement teehee
+
+            println!("{}, {}", low, high);
         }
-
-        // TODO implement teehee
-
-        println!("{}, {}", low, high);
 
 
     }
