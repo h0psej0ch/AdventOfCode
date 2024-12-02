@@ -1,9 +1,9 @@
 #![allow(unused_imports)]
 
-use advent_of_code::puzzles::{puzzle1};
+use advent_of_code::puzzles::{puzzle1, puzzle2};
 
 fn main() {
 
-   puzzle1::solve();
+   puzzle2::solve();
    
 }

@@ -31,7 +31,7 @@ impl Solver {
             list2.push((parts[1]).parse::<usize>().unwrap());
         }
 
-        let mut occurrences: HashMap<usize, usize> = HashMap::new();
+        let occurrences: HashMap<usize, usize> = HashMap::new();
 
         Solver { list1, list2, occurrences }
     }
