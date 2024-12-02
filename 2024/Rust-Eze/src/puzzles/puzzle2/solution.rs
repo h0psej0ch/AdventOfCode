@@ -11,13 +11,21 @@ pub fn solve() {
 }
 
 fn one(contents: &String) {
-    let mut counter: usize = 0;
-    for line in contents.lines() {
-        if check_valid(&line.split_whitespace().collect()) == 0 {
-            counter += 1;
-        }
-    }
-    println!("Part One: {}", counter)
+
+    let count = contents.lines()
+        .map(|line| line.split_whitespace()
+            .map(|char| char.parse::<usize>().unwrap())
+            .collect())
+        .filter(|line: &Vec<usize>| line
+            .windows(2)
+            .all(|window| window[0] > window[1] && window[0].abs_diff(window[1]) <= 3) ||
+            line
+                .windows(2)
+                .all(|window| window[0] < window[1] && window[0].abs_diff(window[1]) <= 3))
+        .count();
+
+    println!("Part One: {}", count)
+
 }
 
 fn two(contents: &String) {
@@ -79,3 +87,4 @@ fn check_valid(list: &Vec<&str>) -> usize {
         index
     }
 }
+
