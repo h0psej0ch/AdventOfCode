@@ -1,6 +1,6 @@
 pub fn solve() {
     
-    let file_path = "input.txt";
+    let file_path = "src/puzzles/puzzle/input.txt";
 
     let contents = std::fs::read_to_string(file_path)
         .expect("No input file");

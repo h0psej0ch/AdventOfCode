@@ -1,31 +1,30 @@
 pub fn solve() {
-    
     let file_path = "src/puzzles/puzzle2/input.txt";
 
-    let contents = std::fs::read_to_string(file_path)
-        .expect("No input file");
+    let contents = std::fs::read_to_string(file_path).expect("No input file");
 
     one(&contents);
     two(&contents);
-
 }
 
 fn one(contents: &String) {
-
-    let count = contents.lines()
-        .map(|line| line.split_whitespace()
-            .map(|char| char.parse::<usize>().unwrap())
-            .collect())
-        .filter(|line: &Vec<usize>| line
-            .windows(2)
-            .all(|window| window[0] > window[1] && window[0].abs_diff(window[1]) <= 3) ||
-            line
-                .windows(2)
-                .all(|window| window[0] < window[1] && window[0].abs_diff(window[1]) <= 3))
+    let count = contents
+        .lines()
+        .map(|line| {
+            line.split_whitespace()
+                .map(|char| char.parse::<usize>().unwrap())
+                .collect()
+        })
+        .filter(|line: &Vec<usize>| {
+            line.windows(2)
+                .all(|window| window[0] > window[1] && window[0].abs_diff(window[1]) <= 3)
+                || line
+                    .windows(2)
+                    .all(|window| window[0] < window[1] && window[0].abs_diff(window[1]) <= 3)
+        })
         .count();
 
     println!("Part One: {}", count)
-
 }
 
 fn two(contents: &String) {
@@ -46,8 +45,7 @@ fn two(contents: &String) {
                 }
                 index -= 1;
             }
-        }
-        else {
+        } else {
             counter += 1;
         }
     }
@@ -66,17 +64,18 @@ fn check_valid(list: &Vec<&str>) -> usize {
                 if previous == integer || integer.abs_diff(previous) > 3 {
                     passed = false;
                     break;
-                }
-                else if previous > integer {
+                } else if previous > integer {
                     operator = 1;
                 } else {
                     operator = -1
                 }
             }
-        }
-        else if (operator == 1 && previous <= integer) || (operator == -1 && previous >= integer) || integer.abs_diff(previous) > 3 {
+        } else if (operator == 1 && previous <= integer)
+            || (operator == -1 && previous >= integer)
+            || integer.abs_diff(previous) > 3
+        {
             passed = false;
-            break
+            break;
         }
         previous = integer;
         index += 1;
@@ -87,4 +86,3 @@ fn check_valid(list: &Vec<&str>) -> usize {
         index
     }
 }
-
