@@ -1,3 +1,5 @@
+use regex::Regex;
+
 pub fn solve() {
     
     let file_path = "src/puzzles/puzzle3/input.txt";
@@ -12,56 +14,17 @@ pub fn solve() {
 
 fn one(contents: &String) {
 
-    let mut result = 0;
+    let regex = Regex::new(r"mul\(\d+,\d+\)").unwrap();
 
-    for line in contents.lines() {
+    let result: usize = regex.find_iter(contents)
+        .map(|m| m.as_str()[4..m.len()-1].split(",").collect::<Vec<_>>())
+        .map(|digits: Vec<_>| {
+            // println!("Digits: {:?}", digits);
+            digits[0].parse::<usize>().unwrap() * digits[1].parse::<usize>().unwrap()
+        }).sum();
 
-        let chars: Vec<char> = line.chars().collect();
-        let mut i = 0;
-        while i + 7 < chars.len() {
-            if chars[i] == 'm' && chars[i+1] == 'u' && chars[i+2] == 'l' && chars[i+3] == '(' {
-                let mut j = i + 4;
+    println!("Puzzle One: {result}");
 
-                let mut bracket = 0;
-                let mut comma = 0;
-
-                while j < chars.len() {
-                    if chars[j] == ')' {
-                        bracket = j;
-                        break;
-                    }
-                    else if chars[j] == ',' {
-                        comma = j;
-                    }
-                    else if !(chars[j].is_digit(10)) {
-                        break;
-                    }
-                    j += 1;
-                }
-
-                if comma != 0 && bracket != 0 {
-
-                    println!("{}", &line[i..=bracket]);
-
-                    let first = &line[i + 4..comma];
-                    let second = &line[comma + 1..bracket];
-
-                    let first = first.parse::<usize>().unwrap();
-                    let second = second.parse::<usize>().unwrap();
-
-                    result += first * second;
-
-                    i = bracket;
-                }
-                else {
-                    i += 3
-                }
-            }
-            i += 1;
-        }
-    }
-
-    println!("Puzzle One: {result}")
 }
 
 fn two(contents: &String) {
@@ -96,7 +59,7 @@ fn two(contents: &String) {
 
                 if comma != 0 && bracket != 0 {
 
-                    println!("{}", &line[i..=bracket]);
+                    // println!("{}", &line[i..=bracket]);
 
                     let first = &line[i + 4..comma];
                     let second = &line[comma + 1..bracket];
