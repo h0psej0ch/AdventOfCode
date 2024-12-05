@@ -7,7 +7,7 @@ pub fn solve() {
     let contents = std::fs::read_to_string(file_path)
         .expect("No input file");
 
-    let solver = Solver::new(contents);
+    let mut solver = Solver::new(contents);
     solver.one();
     solver.two();
 
@@ -47,9 +47,45 @@ impl Solver {
                             None => true,
                         }
                     })
-            ).map(|numbers| numbers[(numbers.len() / 2)]).sum::<usize>();
+            ).map(|numbers| numbers[numbers.len() / 2]).sum::<usize>();
         println!("Puzzle One: {}", sum);
     }
 
-    fn two(&self) {}
+    fn two(&mut self) {
+        let sum: Vec<_> = self.rules.iter().
+            filter(|numbers|
+                numbers.iter().tuple_combinations()
+                    .any(|(a, b)| {
+                        match self.map.get(b) {
+                            Some(vec) => vec.contains(a),
+                            None => false,
+                        }
+                    })
+            ).collect();
+
+        let sum = sum.into_iter().map(|numbers| {
+            println!("Numbers: {:?}", numbers);
+            let mut changed = true;
+            let mut numbers = numbers.clone();
+            while changed {
+                changed = false;
+                let mut new_numbers = numbers.clone();
+                numbers.iter().enumerate().tuple_combinations().for_each(|(a, b)| {
+                    match self.map.get_mut(b.1) {
+                        Some(vec) => {
+                            if vec.contains(a.1) {
+                                new_numbers.swap(a.0, b.0);
+                                println!("Swapped {}, {}", a.1, b.1);
+                                changed = true;
+                            }
+                        }
+                        None => {}
+                    };
+                });
+                numbers = new_numbers;
+            }
+            numbers
+        }).map(|numbers| numbers[numbers.len() / 2]).sum::<usize>();
+        println!("Puzzle Two: {}", sum);
+    }
 }
