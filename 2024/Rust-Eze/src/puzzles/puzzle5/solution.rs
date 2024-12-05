@@ -64,7 +64,6 @@ impl Solver {
             ).collect();
 
         let sum = sum.into_iter().map(|numbers| {
-            println!("Numbers: {:?}", numbers);
             let mut changed = true;
             let mut numbers = numbers.clone();
             while changed {
@@ -75,7 +74,6 @@ impl Solver {
                         Some(vec) => {
                             if vec.contains(a.1) {
                                 new_numbers.swap(a.0, b.0);
-                                println!("Swapped {}, {}", a.1, b.1);
                                 changed = true;
                             }
                         }
