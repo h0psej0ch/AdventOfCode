@@ -21,7 +21,7 @@ fn one(contents: &String) {
             )
         })
         .filter(|(results, numbers)| check_valid(*results, (*numbers).to_owned()))
-        .map(|(a, b)| a)
+        .map(|(a, _b)| a)
         .sum::<i64>();
 
     println!("Puzzle One: {}", sum);
@@ -89,7 +89,7 @@ fn two(contents: &String) {
             )
         })
         .filter(|(results, numbers)| check_valid_concat(*results, (*numbers).to_owned()))
-        .map(|(a, b)| a)
+        .map(|(a, _b)| a)
         .sum::<i64>();
 
     println!("Puzzle Two: {}", sum);
