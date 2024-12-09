@@ -12,7 +12,6 @@ pub fn solve() {
 
 struct Solver {
     antennas: HashMap<char, Vec<(i64, i64)>>,
-    all_antennas: HashSet<(i64, i64)>,
     antinodes: HashSet<(i64, i64)>,
     height: i64,
     width: i64,
@@ -21,13 +20,11 @@ struct Solver {
 impl Solver {
     fn new(contents: String) -> Self {
         let mut antennas: HashMap<char, Vec<(i64, i64)>> = HashMap::new();
-        let mut all_antennas: HashSet<(i64, i64)> = HashSet::new();
-        let mut antinodes: HashSet<(i64, i64)> = HashSet::new();
+        let antinodes: HashSet<(i64, i64)> = HashSet::new();
 
         contents.lines().enumerate().for_each(|(y, line)| {
             line.chars().enumerate().for_each(|(x, char)| {
                 if char != '.' {
-                    all_antennas.insert((x as i64, y as i64));
                     antennas.entry(char).or_insert_with(Vec::new).push((x as i64, y as i64));
                 }
             })
@@ -40,7 +37,6 @@ impl Solver {
 
         Self {
             antennas,
-            all_antennas,
             antinodes,
             height,
             width,
