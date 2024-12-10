@@ -26,12 +26,9 @@ fn one(contents: &String) {
 
     let map = contents.lines().map(|line| line.chars().map(|character| character.to_digit(10).unwrap()).collect::<Vec<_>>()).collect::<Vec<Vec<_>>>();
 
-    println!("{:?}", starting_points);
-
     let sum = starting_points.iter().map(|(x, y)| {
         let mut hashset: HashSet<(i32, i32)> = HashSet::new();
         recursion(map.clone(), *x as i32, *y as i32, 0, &mut hashset);
-        // println!("Result ({}, {}): {}", x, y, hashset.len());
         hashset.len()
     }).sum::<usize>();
 
@@ -41,13 +38,11 @@ fn one(contents: &String) {
 
 fn recursion(map: Vec<Vec<u32>>, x: i32, y: i32, current: u32, hash_set: &mut HashSet<(i32, i32)>) {
     if current == 9 {
-        // println!("FOUND A TRAIL");
         hash_set.insert((x, y));
     }
     DIRECTIONS.iter().for_each(|(dx, dy)| {
         let new = (x + dx, y + dy);
         if new.0 >= 0 && new.1 >= 0 && new.0 < map[0].len() as i32 && new.1 < map.len() as i32 && map[(new.1) as usize][(new.0) as usize] == current + 1{
-            // println!("Found {} at {:?}", current + 1, new);
             recursion(map.clone(), x + dx, y + dy, current + 1, hash_set);
         };
     });
@@ -66,27 +61,22 @@ fn two(contents: &String) {
 
     let map = contents.lines().map(|line| line.chars().map(|character| character.to_digit(10).unwrap()).collect::<Vec<_>>()).collect::<Vec<Vec<_>>>();
 
-    println!("{:?}", starting_points);
-
     let sum = starting_points.iter().map(|(x, y)| {
         let mut vector = Vec::new();
         recursion_vector(map.clone(), *x as i32, *y as i32, 0, &mut vector);
-        println!("Result ({}, {}): {}", x, y, vector.len());
         vector.len()
     }).sum::<usize>();
 
-    println!("Puzzle One: {}",sum)
+    println!("Puzzle Two: {}",sum)
 }
 
 fn recursion_vector(map: Vec<Vec<u32>>, x: i32, y: i32, current: u32, vector: &mut Vec<(i32, i32)>) {
     if current == 9 {
-        println!("FOUND A TRAIL");
         vector.push((x, y));
     }
     DIRECTIONS.iter().for_each(|(dx, dy)| {
         let new = (x + dx, y + dy);
         if new.0 >= 0 && new.1 >= 0 && new.0 < map[0].len() as i32 && new.1 < map.len() as i32 && map[(new.1) as usize][(new.0) as usize] == current + 1{
-            println!("Found {} at {:?}", current + 1, new);
             recursion_vector(map.clone(), x + dx, y + dy, current + 1, vector);
         };
     });
