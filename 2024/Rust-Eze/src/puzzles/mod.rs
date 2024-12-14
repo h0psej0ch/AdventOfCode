@@ -11,7 +11,7 @@ pub mod puzzle10;
 pub mod puzzle11;
 pub mod puzzle12;
 pub mod puzzle13;
-// pub mod puzzle14;
+pub mod puzzle14;
 //pub mod puzzle15;
 // pub mod puzzle16;
 // pub mod puzzle17;
