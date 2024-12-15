@@ -4,6 +4,6 @@ use advent_of_code::puzzles::*;
 
 fn main() {
 
-   puzzle14::solve();
+   puzzle15::solve();
    
 }
