@@ -24,7 +24,7 @@ fn one(contents: &String) {
         })
         .count();
 
-    println!("Part One: {}", count)
+    println!("Puzzle One: {}", count)
 }
 
 fn two(contents: &String) {
@@ -49,7 +49,7 @@ fn two(contents: &String) {
             counter += 1;
         }
     }
-    println!("Part Two: {}", counter);
+    println!("Puzzle Two: {}", counter);
 }
 
 fn check_valid(list: &Vec<&str>) -> usize {

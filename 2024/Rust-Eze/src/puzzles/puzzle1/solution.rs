@@ -49,7 +49,7 @@ impl Solver {
                 result += self.list2[i] - self.list1[i];
             }
         }
-        println!("{}", result)
+        println!("Puzzle One: {}", result)
     }
 
     fn two(&mut self) {
@@ -69,7 +69,7 @@ impl Solver {
             }
         }
 
-        println!("{}", result)
+        println!("Puzzle Two: {}", result)
     }
 }
 

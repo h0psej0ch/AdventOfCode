@@ -83,7 +83,7 @@ fn two(contents: &String) {
             .collect::<Vec<_>>();
         if positions.iter().unique_by(|((x, y), (_dx, _dy))| (x, y)).collect::<Vec<_>>().len() == 500 {
             println!("Puzzle Two: {}", i);
-            tree_printer(positions.clone());
+            // tree_printer(positions.clone());
             break;
         }
     }

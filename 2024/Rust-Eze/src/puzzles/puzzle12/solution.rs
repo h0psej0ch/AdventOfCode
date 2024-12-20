@@ -207,7 +207,7 @@ impl Solver {
                     }
                 }
                 if parameter % 2 != 0 {
-                    println!("P: {} | A: {} | T: {}, CHAR: {}, X: {} | Y: {}", parameter, area, parameter * area, char, x, y);
+                    // println!("P: {} | A: {} | T: {}, CHAR: {}, X: {} | Y: {}", parameter, area, parameter * area, char, x, y);
                 }
                 total += parameter * area;
             }

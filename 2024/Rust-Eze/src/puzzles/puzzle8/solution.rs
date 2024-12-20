@@ -53,26 +53,26 @@ impl Solver {
                         let pos1 = (x1 + (x1 - x2), y1 + (y1 - y2));
                         let pos2 = (x2 + (x2 - x1), y2 + (y2 - y1));
                         if pos1.0 >= 0 && pos1.1 >= 0 && pos1.0 < self.width && pos1.1 < self.height {
-                            println!{"{:?}", pos1}
+                            // println!{"{:?}", pos1}
                             self.antinodes.insert(pos1);
                         }
                         if pos2.0 >= 0 && pos2.1 >= 0 && pos2.0 < self.width && pos2.1 < self.height {
-                            println!{"{:?}", pos2}
+                            // println!{"{:?}", pos2}
                             self.antinodes.insert(pos2);
                         }
                     }));
-        println!("{}", self.antinodes.len());
+        println!("Puzzle One: {}", self.antinodes.len());
 
-        for i in 0..12 {
-            for j in 0..12 {
-                if self.antinodes.contains(&(j as i64, i as i64)) {
-                    print!("#")
-                } else {
-                    print!(".")
-                }
-            }
-            println!();
-        }
+        // for i in 0..12 {
+        //     for j in 0..12 {
+        //         if self.antinodes.contains(&(j as i64, i as i64)) {
+        //             print!("#")
+        //         } else {
+        //             print!(".")
+        //         }
+        //     }
+        //     println!();
+        // }
     }
 
     fn two(&mut self) {
@@ -87,27 +87,27 @@ impl Solver {
                         let mut pos1 = (*x1,*y1);
                         let mut pos2 = (*x2,*y2);
                         while pos1.0 >= 0 && pos1.1 >= 0 && pos1.0 < self.width && pos1.1 < self.height {
-                            println!{"{:?}", pos1}
+                            // println!{"{:?}", pos1}
                             self.antinodes.insert(pos1);
                             pos1 = (pos1.0 + dif1.0, pos1.1 + dif1.1);
                         }
                         while pos2.0 >= 0 && pos2.1 >= 0 && pos2.0 < self.width && pos2.1 < self.height {
-                            println!{"{:?}", pos2}
+                            // println!{"{:?}", pos2}
                             self.antinodes.insert(pos2);
                             pos2 = (pos2.0 + dif2.0, pos2.1 + dif2.1);
                         }
                     }));
-        println!("{}", self.antinodes.len());
+        println!("Puzzle Two: {}", self.antinodes.len());
 
-        for i in 0..self.height {
-            for j in 0..self.width {
-                if self.antinodes.contains(&(j as i64, i as i64)) {
-                    print!("#")
-                } else {
-                    print!(".")
-                }
-            }
-            println!();
-        }
+        // for i in 0..self.height {
+        //     for j in 0..self.width {
+        //         if self.antinodes.contains(&(j as i64, i as i64)) {
+        //             print!("#")
+        //         } else {
+        //             print!(".")
+        //         }
+        //     }
+        //     println!();
+        // }
     }
 }
