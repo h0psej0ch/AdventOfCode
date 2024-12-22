@@ -102,7 +102,7 @@ fn one(contents: &String) {
             });
             (numeric, steps)
         })
-        .map(|(numeric, mut code)| {
+        .map(|(numeric, code)| {
             let mut lowest = isize::MAX;
             let optimals = calculate_optimal();
 
@@ -126,7 +126,7 @@ fn one(contents: &String) {
                     pairs = new_pairs;
                 }
 
-                let count =  pairs.iter().map(|(a, b)| b).sum::<isize>();
+                let count =  pairs.iter().map(|(_a, b)| b).sum::<isize>();
                 if count < lowest {
                     lowest = count;
                 }
@@ -270,7 +270,7 @@ fn two(contents: &String) {
             });
             (numeric, steps)
         })
-        .map(|(numeric, mut code)| {
+        .map(|(numeric, code)| {
             let mut lowest = isize::MAX;
             let optimals = calculate_optimal();
 
@@ -294,7 +294,7 @@ fn two(contents: &String) {
                     pairs = new_pairs;
                 }
 
-                let count =  pairs.iter().map(|(a, b)| b).sum::<isize>();
+                let count =  pairs.iter().map(|(_a, b)| b).sum::<isize>();
                 if count < lowest {
                     lowest = count;
                 }
