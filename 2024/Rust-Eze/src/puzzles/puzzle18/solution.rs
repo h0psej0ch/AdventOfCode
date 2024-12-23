@@ -32,7 +32,7 @@ fn one(contents: &String) {
 }
 
 fn two(contents: &String) {
-    let mut min = 0;
+    let min = 0;
     let mut obstacles: HashSet<(isize, isize)> = HashSet::new();
     let bytes = contents
         .lines()

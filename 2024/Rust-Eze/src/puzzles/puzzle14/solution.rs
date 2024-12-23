@@ -89,6 +89,7 @@ fn two(contents: &String) {
     }
 }
 
+#[allow(dead_code)]
 fn tree_printer(positions: Vec<((isize, isize), (isize, isize))>) {
     let points: Vec<_> = positions.iter().unique_by(|((x, y), (_dx, _dy))| (x, y)).map(|(a, _b)| a).collect();
     for y in 0..HEIGHT {

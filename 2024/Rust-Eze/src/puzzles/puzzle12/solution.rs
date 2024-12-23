@@ -110,8 +110,8 @@ impl Solver {
 
                 let mut frontier: VecDeque<(usize, usize)> = VecDeque::new();
                 frontier.push_back((y, x));
-                let mut y = 0;
-                let mut x = 0;
+                let mut y;
+                let mut x;
                 while frontier.len() > 0 {
                     (y, x) = frontier.pop_front().unwrap();
                     area += 1;
