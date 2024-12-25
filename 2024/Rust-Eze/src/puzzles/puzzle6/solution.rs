@@ -84,15 +84,13 @@ impl Solver {
         while position.0 > 0 && position.1 > 0 && position.0 < new_map.len() as i32 -1  && position.1 < new_map[0].len() as i32 - 1 {
             while new_map[(position.0 + direction.0) as usize][(position.1 + direction.1) as usize] == '#' {
                 direction = self.turn(direction);
+                if loop_check.contains(&(position, direction)) {
+                    return true
+                }
+                loop_check.insert((position, direction));
             }
 
             position = (position.0 + direction.0, position.1 + direction.1);
-
-            if loop_check.contains(&(position, direction)) {
-                return true
-            }
-
-            loop_check.insert((position, direction));
         }
 
         false
