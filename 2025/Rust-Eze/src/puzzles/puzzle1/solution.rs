@@ -41,7 +41,7 @@ impl Solver {
                 dial == 0
             })
             .count();
-        println!("Puzzle 1: {}", total)
+        println!("Puzzle 1.1: {}", total)
     }
 
     fn two(&self) {
@@ -66,6 +66,6 @@ impl Solver {
                 ret
             })
             .sum();
-        println!("Puzzle 2: {}", total);
+        println!("Puzzle 1.2: {}", total);
     }
 }
