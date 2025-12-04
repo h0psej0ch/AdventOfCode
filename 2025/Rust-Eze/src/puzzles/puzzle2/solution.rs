@@ -56,5 +56,5 @@ fn two(contents: &str) {
                 .sum::<u128>()
         })
         .sum();
-    println!("Puzzle 2.1: {}", result);
+    println!("Puzzle 2.2: {}", result);
 }
