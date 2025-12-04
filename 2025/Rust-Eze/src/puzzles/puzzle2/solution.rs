@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 pub fn solve() {
     let file_path = "src/puzzles/puzzle2/input.txt";
 
@@ -39,26 +41,30 @@ fn two(contents: &str) {
                 val2.trim().parse::<u128>().unwrap(),
             )
         })
-        .map(|(val1, val2)| {
-            (val1..=val2)
-                .filter(|val| {
-                    let dig_len = val.ilog10() + 1;
-                    for i in 1..=dig_len / 2 {
-                        if dig_len % i == 0 {
-                            let pattern = val % 10_u128.pow(i);
-                            if *val
-                                == (0..dig_len / i)
-                                    .map(|j| 10_u128.pow(i).pow(j) * pattern)
-                                    .sum::<u128>()
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    false
-                })
-                .sum::<u128>()
-        })
+        .map(|(lower, upper)| generate_repetitions(lower, upper))
         .sum();
     println!("Puzzle 2.2: {}", result);
+}
+
+fn generate_repetitions(lower: u128, upper: u128) -> u128 {
+    let low_len = (lower as f64).log10() as u32 + 1;
+    let high_len = (upper as f64).log10() as u32 + 1;
+
+    let mut hits: HashSet<u128> = HashSet::new();
+
+    for len in low_len..=high_len {
+        (1..=len / 2).filter(|n| len % n == 0).for_each(|n| {
+            (10_u128.pow(n - 1)..10_u128.pow(n))
+                .map(|m| {
+                    (0..len / n)
+                        .map(|x| 10_u128.pow(n).pow(x) * m)
+                        .sum::<u128>()
+                })
+                .filter(|&num| num >= lower && num <= upper)
+                .for_each(|num| {
+                    hits.insert(num);
+                });
+        });
+    }
+    hits.into_iter().sum::<u128>()
 }
