@@ -42,11 +42,15 @@ fn two(contents: &str) {
         .map(|(val1, val2)| {
             (val1..=val2)
                 .filter(|val| {
-                    let alpha = val.to_string();
-                    for i in 1..=alpha.len() / 2 {
-                        if alpha.len() % i == 0 {
-                            let starter: String = alpha[0..i].to_string();
-                            if alpha == starter.repeat(alpha.len() / i) {
+                    let dig_len = val.ilog10() + 1;
+                    for i in 1..=dig_len / 2 {
+                        if dig_len % i == 0 {
+                            let pattern = val % 10_u128.pow(i);
+                            if *val
+                                == (0..dig_len / i)
+                                    .map(|j| 10_u128.pow(i).pow(j) * pattern)
+                                    .sum::<u128>()
+                            {
                                 return true;
                             }
                         }
