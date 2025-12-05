@@ -19,16 +19,25 @@ fn one(contents: &str) {
                 val2.trim().parse::<u128>().unwrap(),
             )
         })
-        .map(|(val1, val2)| {
-            (val1..=val2)
-                .filter(|val| {
-                    let logged = 10_u128.pow((*val as f64).log(10.0).ceil() as u32 / 2);
-                    *val == (val % logged) * (logged + 1)
-                })
-                .sum::<u128>()
-        })
+        .map(|(val1, val2)| double_generation(val1, val2))
         .sum();
     println!("Puzzle 2.1: {}", result);
+}
+
+fn double_generation(lower: u128, upper: u128) -> u128 {
+    let low_len = (lower as f64).log10() as u32 + 1;
+    let high_len = (upper as f64).log10() as u32 + 1;
+
+    (low_len..=high_len)
+        .filter(|n| n % 2 == 0)
+        .map(|n| n / 2)
+        .map(|n| {
+            (10_u128.pow(n - 1)..10_u128.pow(n))
+                .map(|m| m * 10_u128.pow(n) + m)
+                .filter(|&o| o >= lower && o <= upper)
+                .sum::<u128>()
+        })
+        .sum::<u128>()
 }
 
 fn two(contents: &str) {
