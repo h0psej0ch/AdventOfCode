@@ -49,7 +49,7 @@ impl Solver {
         beams.insert(self.origin);
         for _ in 0..self.end {
             let mut new_beams: HashSet<(usize, usize)> = HashSet::new();
-            for ((x, y)) in beams {
+            for (x, y) in beams {
                 if self.splitters.contains(&(x, y)) {
                     splits += 1;
                     new_beams.insert((x - 1, y + 1));
