@@ -121,7 +121,7 @@ impl Solver {
             }
         }
         println!(
-            "Puzzel 8.2: {}",
+            "Puzzle 8.2: {}",
             self.junctions[last.0].0 * self.junctions[last.1].0
         );
     }
