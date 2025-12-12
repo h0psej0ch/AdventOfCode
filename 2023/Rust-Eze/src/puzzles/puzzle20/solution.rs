@@ -7,8 +7,7 @@ pub fn solve() {
 
     let mut solver = Solver::new(contents);
 
-    solver.one();
-    solver.two();
+    solver.solve();
 }
 
 struct Solver {
@@ -21,20 +20,32 @@ impl Solver {
         let mut flip_flop = HashMap::new();
         let mut conjunction = HashMap::new();
 
-        for line in contents.lines() {
-            let split_line: Vec<_> = line.split(" -> ").collect();
-            let destinations: Vec<_> = split_line[1].split(", ").map(|s| s.to_string()).collect();
-            match line.chars().nth(0).unwrap() {
+        contents
+            .lines()
+            .map(|line| line.split_once(" -> ").unwrap())
+            .for_each(|(source, dest)| match source.chars().nth(0).unwrap() {
                 '&' => {
-                    let mut input: HashMap<String, bool> = HashMap::new();
-                    conjunction.insert(split_line[0][1..].to_string(), (input, destinations));
+                    conjunction.insert(
+                        source[1..].to_string(),
+                        (
+                            HashMap::new(),
+                            dest.split(", ").map(|s| s.to_string()).collect(),
+                        ),
+                    );
                 }
                 '%' | 'b' => {
-                    flip_flop.insert(split_line[0][1..].to_string(), (false, destinations));
+                    flip_flop.insert(
+                        source[1..].to_string(),
+                        (
+                            false,
+                            dest.split(",")
+                                .map(|s| s.to_string().split_whitespace().collect::<String>())
+                                .collect(),
+                        ),
+                    );
                 }
                 _ => {}
-            }
-        }
+            });
 
         for key in flip_flop.keys() {
             for destination in &flip_flop.get(key).unwrap().1 {
@@ -58,93 +69,116 @@ impl Solver {
             }
         }
 
-        println!("{:?}", flip_flop);
-        for i in 0..5 {println!()};
-        println!("{:?}", conjunction);
-
         Solver {
             flip_flop,
             conjunction,
         }
     }
 
-    fn one(&mut self) {
+    fn solve(&mut self) {
+        let mut responsibles: Vec<String> = self
+            .conjunction
+            .get("dt")
+            .unwrap()
+            .0
+            .keys()
+            .map(|x| x.to_string())
+            .collect();
 
-        let mut queue: VecDeque<(String, bool)> = VecDeque::new();
+        let mut resp_map: HashMap<String, usize> = HashMap::new();
 
-        let mut button_press: usize = 0;
+        let mut button_presses = 0;
 
-        let mut low: usize = 1;
-        let mut high: usize = 0;
+        let mut low = 0;
+        let mut high = 0;
 
-        let mut first = true;
-
-        while !self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)) && button_press < 3|| first {
-            button_press += 1;
-
-            // queue.push_back(("roadcaster".to_string(), false));
-
-            for node in &self.flip_flop.get("roadcaster").unwrap().1 {
-                queue.push_back((node.to_string(), false))
+        while !responsibles.is_empty() {
+            button_presses += 1;
+            if button_presses == 1001 {
+                println!("Puzzle 20.1: {}", low * high);
             }
-
-            // println!("{}", self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)));
-
-            first = true;
-            let mut done_check = false;
-
-            // Improve: Push multiple times for better result if queue is empty :)
-
-            while (!done_check && queue.len() > 0) || first {
-                let current_node = queue.pop_front().unwrap_or(("".to_string(), false));
-                if current_node.1 { high += 1} else { low += 1 };
-                let clone = current_node.clone();
-                match self.flip_flop.get_mut(&current_node.0) {
-                    Some(flip) => {
-                        // println!("flip");
-                        // println!("{}", current_node.1);
-                        if !current_node.1 {
-                            flip.0 = !flip.0;
-                            // println!("{:?}", flip.1);
-                            for node in &flip.1 {
-                                // println!("{}", node);
-                                if !done_check {queue.push_back((node.to_string(), flip.0)); }
-                                println!("{},  -{}-> {}", clone.0, if flip.0 {"high"} else {"low"}, node);
-                            }
-                        }
-                    }
-                    None => {
-                        match self.conjunction.get_mut(&current_node.0) {
-                            Some(conj) => {
-                                    // println!("conj");
-                                    conj.0.insert(current_node.0, current_node.1);
-                                    for node in &conj.1 {
-                                        let signal = conj.0.keys().all(|key| *conj.0.get(key).unwrap_or(&false));
-                                        if !done_check {queue.push_back((node.to_string(), conj.0.keys().all(|key| *conj.0.get(key).unwrap_or(&false)))); }
-                                        println!("{},  -{}-> {}", clone.0, if signal {"high"} else {"low"}, node);
-                                    }
-                            }
-                            None => {}
-                        }
-                    }
-
-                } 
-                if first { first = !first }
-
-                if self.flip_flop.keys().all(|key| !(self.flip_flop.get(key).unwrap().0)) {
-                    done_check = true;
+            let length = self.flip_flop.get("roadcaster").unwrap().1.len();
+            low += 1;
+            let mut signals: VecDeque<((String, String), bool)> = VecDeque::from(
+                self.flip_flop
+                    .get("roadcaster")
+                    .unwrap()
+                    .1
+                    .clone()
+                    .into_iter()
+                    .zip(vec!["roadcaster".to_string(); length])
+                    .zip(vec![false; length])
+                    .collect::<Vec<((String, String), bool)>>(),
+            );
+            while !signals.is_empty() {
+                let ((current, from), sig) = signals.pop_front().unwrap();
+                if sig {
+                    high += 1;
+                } else {
+                    low += 1;
                 }
-                // println!("{:?}", queue)
+                if sig && responsibles.contains(&from) {
+                    match resp_map.get(&from) {
+                        Some(val) => {
+                            resp_map.insert(from.clone(), button_presses - val);
+                            responsibles
+                                .remove(responsibles.iter().position(|n| *n == from).unwrap());
+                        }
+                        None => {
+                            resp_map.insert(from.clone(), button_presses);
+                        }
+                    }
+                }
+                if current != "rx" && current != "output" {
+                    match self.flip_flop.get_mut(&current) {
+                        Some((active, further)) => {
+                            if !sig {
+                                *active = !*active;
+                                signals.extend(
+                                    further
+                                        .iter()
+                                        .map(|x| x.to_string())
+                                        .zip(vec![current; further.len()])
+                                        .zip(vec![*active; further.len()])
+                                        .collect::<Vec<((String, String), bool)>>(),
+                                );
+                            }
+                        }
+                        None => {
+                            let (received, further) = self.conjunction.get_mut(&current).unwrap();
+                            received.insert(from, sig);
+                            signals.extend(
+                                further
+                                    .iter()
+                                    .map(|x| x.to_string())
+                                    .zip(vec![current; further.len()])
+                                    .zip(vec![!received.values().all(|val| *val); further.len()])
+                                    .collect::<Vec<((String, String), bool)>>(),
+                            );
+                        }
+                    }
+                }
             }
-
-            // TODO implement teehee
-
-            println!("{}, {}", low, high);
         }
-
-
+        let divisor = resp_map
+            .values()
+            .copied()
+            .reduce(|acc, x| gcf(acc, x))
+            .unwrap();
+        println!(
+            "Puzzle 20.2: {}",
+            resp_map.values().copied().reduce(|acc, x| acc * x).unwrap() / divisor
+        );
     }
+}
 
-    fn two(&self) {}
-
+fn gcf(mut a: usize, mut b: usize) -> usize {
+    while a != b {
+        if a > b {
+            a -= b;
+        } else {
+            b -= a;
+        }
+    }
+    a
 }
